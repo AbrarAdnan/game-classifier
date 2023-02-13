@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 import requests
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='/static')
 
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -14,11 +14,16 @@ def index():
         label_text = ''
         for idx, label in enumerate(labels):
             label_text = label_text + label
-            if idx != len(labels) - 1: label_text = label_text + ','
+            if idx != len(labels) - 1: label_text = label_text + ', '
         print(label_text)
-        return render_template('result.html', input_text=input_text, output_text=label_text) 
+        print(type(label_text))
+        return render_template('index.html', results=str(label_text)) 
     else:
         return render_template('index.html') 
+
+@app.route('/images/<path:path>')
+def serve_image(path):
+    return send_from_directory('static/images', path)
 
 def predict_genres(input_text):
     response = requests.post("https://abrar-adnan-game-classifier.hf.space/run/predict", json={
