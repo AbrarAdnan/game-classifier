@@ -21,10 +21,6 @@ def index():
     else:
         return render_template('index.html') 
 
-@app.route('/images/<path:path>')
-def serve_image(path):
-    return send_from_directory('static/images', path)
-
 def predict_genres(input_text):
     response = requests.post("https://abrar-adnan-game-classifier.hf.space/run/predict", json={
 	"data": [
